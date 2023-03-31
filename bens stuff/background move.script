@@ -1,0 +1,23 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id  == hash("GameOver") then
+	local p = go.get_position()
+	p.x = 800
+	p.y = 800
+	go.get_position(p)
+end
+
+end
+
+function on_input(self, action_id, action)
+	-- reset animated background
+	if action_id == hash("restart") then
+		local p = go.get_position()
+		p.x = 0
+		p.y = 0
+		go.get_position(p)
+	end
+		

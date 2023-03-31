@@ -1,0 +1,59 @@
+local speed = 0
+local gravity
+function init(self)
+	msg.post(".", "aquire_input_focus")
+end
+
+function update(self, dt)
+local p = go.get_position()
+-- moves fox down after it has been above ground level
+	if p.y > 130 and gravity < 1000 then
+		local p = go.get_position()
+		p.y = p.y - gravity 
+		gravity = gravity + 0.2
+		go.get_position(p)
+	else
+		gravity = 3
+	end
+	local speed = 0
+	-- moves the fox up without input when above ground level
+	if speed == 0 and p.y > 130 then
+		local p = go.get_position()
+		p.y = p.y + 7.5
+		go.get_position(p)
+	end 
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("GameOver") then --game ends
+		local p = go.get_position()
+		p.x = -500
+		go.set_position(p)
+		o = p.y -- position of fox at moment of collision
+		msg.post("/Dead Fox#Dead Fox", "GameOVer",{ o }) -- send to script
+	end
+end 
+
+function on_input(self, action_id, action)
+	-- moves the fox up
+	local p = go.get_position()
+	if action_id == hash("jump") and p.y < 300 then
+		speed = 3.5
+		local p = go.get_position()
+		p.y = p.y + speed
+		go.set_position(p)
+
+		--creates a curve at the top to jump
+	elseif action_id == hash("jump") and p.y > 200 then
+		local p = go.get_position())
+		speed = 1
+		p.y = p.y + speed
+		go.set_position(p)
+	end
+	-- reset fox animation
+	if action_id == hash("restart") then
+		local p = go.get_position()
+		p.x = 80
+		go.set_position(p)
+	end
+end
