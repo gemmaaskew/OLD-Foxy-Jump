@@ -1,0 +1,56 @@
+--important variables
+local start = false
+local randomPosition = 0
+local speed = math.random(10,20)
+local death = false
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.position = go.get_position()
+	self.velocity = vmath.vector3(0, 0, 0)
+	self.speed = 250
+	
+end
+
+function update(self, dt)
+	self.velocity.x = -250
+	go.set_position(go.get_position() + self.velocity * dt)
+	if go.get_position().x < -100 then
+		go.set_position(vmath.vector3(1100, 205, 0))
+	end
+end
+-- 	if death == false then --death is false when the game is running
+-- 		start = true
+-- 	end
+-- 
+-- 	local p = go.get_position()-- moves the obstacles
+-- 	if start == true then
+-- 			p.x = p.x - speed
+-- 			go.set_position(p)
+-- 	end
+-- 	if p.x < 0 and start == true then -- resets the obstacles
+-- 			randomPosition = math.random(2500,6000)
+-- 			p.x = randomPosition
+-- 			go.set_position(p)
+-- 			speed = math.random(5,15)
+-- 	end
+
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_point_response") then
+	end
+end
+
+function on_input(self, action_id, action)
+	-- --resets the obstacles when the game is restarted.
+	-- if action_id == hash("restart") then
+	-- 	start = false
+	-- 	death = false
+	-- 	local p = go.get_position()
+	-- 	randomPosition = math.random(2500,6000)
+	-- 	p.x = randomPosition
+	-- 	go.set_position(p)
+	-- 	speed = math.random(5,15)
+	-- 	timer = 0
+	-- end
+end

@@ -1,0 +1,64 @@
+local RIGHT = hash("jump")
+
+local GRAVITY_MIN = -3000
+local GRAVITY_MAX = 1000
+local JUMP_SPEED = 2000
+
+
+function on_input(self, action_id, action)
+	if action_id then
+		if action_id == hash("jump") then
+			self.velocity.y = JUMP_SPEED
+		end
+	end
+end
+	
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") then
+		if message['other_id'] == hash('/bigtree') or message['other_id'] == hash('/smalltree')then
+			go.set_position(vmath.vector3(536,316,0.4), 'gameover')
+		end
+	local newpos = go.get_position() + message.normal * message.distance
+	go.set_position(newpos)
+end
+
+-- if message is start then
+	-- self.start = true
+-- end
+end
+
+
+local function apply_gravity(self, v, DELTATIME, GRAVITY, GSPEED)
+	v = v + GRAVITY * DELTATIME
+	if v < -GSPEED then
+		return -GSPEED
+	elseif v > GSPEED then
+		return GSPEED
+	else
+		return v
+	end
+end
+
+
+function update(self, dt)
+	if self.start == true then
+		self.velocity.y = apply_gravity(self, self.velocity.y, dt, GRAVITY_MIN, GRAVITY_MAX)
+		go.set_position(go.get_position() + self.velocity * dt)
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.actions = {}
+	self.current_animation = nil
+	self.position = go.get_position()
+	self.velocity = vmath.vector3(0, 0, 0)
+	self.speed = 200
+	self.ground_contact = false
+	self.start = false
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end

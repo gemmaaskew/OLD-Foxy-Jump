@@ -1,0 +1,22 @@
+--important variables
+local start = false
+local randomPosition = 0
+local speed = math.random(10,20)
+local death = false
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.position = go.get_position()
+	self.velocity = vmath.vector3(0, 0, 0)
+	self.speed = 200
+end
+
+function update(self, dt)
+	-- this resets the clouds to the far right when they reach the far left which creates infinite scrolling
+	-- this makes the platformer looks as if the fox if moving, however it is the clouds that are moving instead.
+	self.velocity.x = -100
+	go.set_position(go.get_position() + self.velocity * dt)
+	if go.get_position().x < -1010 then
+		go.set_position(vmath.vector3(1050, 0, 0))
+	end
+end

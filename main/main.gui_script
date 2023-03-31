@@ -1,0 +1,5 @@
+function update(self, dt)
+	local timer = tostring(os.clock("%H:%M"))
+	local score_text = gui.get_node("score")
+	gui.set_text(score_text, timer)
+end
